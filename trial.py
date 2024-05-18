@@ -15,7 +15,7 @@ model = load_trained_model()
 # Class labels
 class_labels = ["Cheetah", "Lion"]
 
-# Streamlit app title and description
+# Streamlit app title
 st.title("Animal Classification")
 st.write("Upload an image of a Cheetah or Lion, and the model will predict the class.")
 
@@ -52,7 +52,7 @@ if uploaded_file is not None:
 
     # Convert the image to the correct format
     image = np.array(image)
-    if image.shape[2] == 4:  # if the image has an alpha channel, remove it
+    if image.shape[2] == 4:
         image = image[:, :, :3]
     image = cv2.resize(image, (128, 128))
     image = image / 255.0
@@ -68,4 +68,3 @@ if uploaded_file is not None:
     # Display probabilities
     st.write(f"Confidence: {predicted_probabilities[0][predicted_class] * 100:.2f}%")
 
-# To run this app, save it as streamlit_app.py and use the command `streamlit run streamlit_app.py`
