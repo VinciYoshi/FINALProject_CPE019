@@ -17,7 +17,7 @@ from PIL import Image
 # Load the trained model
 @st.cache(allow_output_mutation=True)
 def load_trained_model():
-    model = load_model("best_model.h5")
+    model = load_model("model.h5")
     return model
 
 model = load_trained_model()
