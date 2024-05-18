@@ -5,6 +5,18 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
 
+# Load the trained model
+@st.cache(allow_output_mutation=True)
+def load_trained_model():
+    model = load_model("best_model.h5")
+    return model
+
+model = load_trained_model()
+
+# Class labels
+class_labels = ["Cheetah", "Lion"]
+
+# Streamlit app configuration
 # Set Streamlit page configuration
 st.set_page_config(
     page_title="Image Classification: Lion or Cheetah",
