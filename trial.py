@@ -19,6 +19,27 @@ class_labels = ["Cheetah", "Lion"]
 st.title("Animal Classification")
 st.write("Upload an image of a Cheetah or Lion, and the model will predict the class.")
 
+background_image_url = "https://i.ytimg.com/vi/4iJJXtxytqE/maxresdefault.jpg"
+
+st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background: url({background_image_url});
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        color: black;
+    }}
+    .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6, .stApp p, .stApp label, .stApp .caption {{
+        color: black;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 # File uploader
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
