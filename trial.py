@@ -15,12 +15,8 @@ model = load_trained_model()
 # Class labels
 class_labels = ["Cheetah", "Lion"]
 
-st.set_page_config(
-    page_title="Image Classification: Lion or Cheetah",
-    page_icon="🦁",  # Lion emoji
-    layout="centered",
-    initial_sidebar_state="auto"
-)
+
+st.page_icon="🦁",  # Lion emoji
 
 # Streamlit app title
 st.title("Animal Classification")
