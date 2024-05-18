@@ -15,6 +15,13 @@ model = load_trained_model()
 # Class labels
 class_labels = ["Cheetah", "Lion"]
 
+st.set_page_config(
+    page_title="Image Classification: Lion or Cheetah",
+    page_icon="🦁",  # Lion emoji
+    layout="centered",
+    initial_sidebar_state="auto"
+)
+
 # Streamlit app title
 st.title("Animal Classification")
 st.write("Upload an image of a Cheetah or Lion, and the model will predict the class.")
