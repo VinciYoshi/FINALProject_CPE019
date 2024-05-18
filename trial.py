@@ -2,50 +2,7 @@ import streamlit as st
 import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
-
-# Load the trained model
-@st.cache(allow_output_mutation=True)
-def load_trained_model():
-    model = load_model("model.h5")
-    return model
-
-model = load_trained_model()
-
-# Class labels
-class_labels = ["Cheetah", "Lion"]
-
-# Streamlit app configuration
-# Set Streamlit page configuration
-st.set_page_config(
-    page_title="Image Classification: Lion or Cheetah",
-    page_icon=":camera:",
-    layout="centered",
-    initial_sidebar_state="auto"
-)
-
-# URL of the background image
-background_image_url = "https://cdn.filtergrade.com/wp-content/uploads/2022/05/07163953/Screenshot-1693.png?_gl=1*ifhv1h*_ga*MTkxNDI2MjQxNC4xNzE2MDM1NTE1*_ga_NG82BG2M3G*MTcxNjAzNTUxNC4xLjAuMTcxNjAzNTUxNC42MC4wLjA.*_gcl_au*MTEyMjk0MDI2Ni4xNzE2MDM1NTE1"
-
-# Custom CSS to set the background image
-st.markdown(
-    f"""
-    <style>
-    .stApp {{
-        background: url({background_image_url});
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        color: black;
-    }}
-    .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6, .stApp p, .stApp label, .stApp .caption {{
-        color: black;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 # Load the trained model
 @st.cache(allow_output_mutation=True)
@@ -59,20 +16,11 @@ model = load_trained_model()
 class_labels = ["Cheetah", "Lion"]
 
 # Streamlit app title and description
-st.title("Image Classification: Lion or Cheetah")
+st.title("Animal Classification")
 st.write("Upload an image of a Cheetah or Lion, and the model will predict the class.")
 
 # File uploader
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-
-def prepare_image(image, target_size=(128, 128)):
-    if image.mode != "RGB":
-        image = image.convert("RGB")
-    image = image.resize(target_size)
-    image = img_to_array(image)
-    image = np.expand_dims(image, axis=0)
-    image = image / 255.0
-    return image
 
 if uploaded_file is not None:
     # Display the uploaded image
@@ -81,19 +29,22 @@ if uploaded_file is not None:
     st.write("")
     st.write("Classifying...")
 
-    # Prepare the image
-    prepared_image = prepare_image(image)
+    # Convert the image to the correct format
+    image = np.array(image)
+    if image.shape[2] == 4:  # if the image has an alpha channel, remove it
+        image = image[:, :, :3]
+    image = cv2.resize(image, (128, 128))
+    image = image / 255.0
+    image = np.reshape(image, (1, 128, 128, 3))
 
     # Make prediction
-    predicted_probabilities = model.predict(prepared_image)
+    predicted_probabilities = model.predict(image)
     predicted_class = np.argmax(predicted_probabilities)
 
     # Display the prediction
     st.write(f"Predicted class: **{class_labels[predicted_class]}**")
 
     # Display probabilities
-    st.write("Prediction Confidence Scores:")
-    for idx, score in enumerate(predicted_probabilities[0]):
-        st.write(f"{class_labels[idx]}: {score * 100:.2f}%")
-else:
-    st.write("Please upload an image file to proceed.")
+    st.write(f"Confidence: {predicted_probabilities[0][predicted_class] * 100:.2f}%")
+
+# To run this app, save it as streamlit_app.py and use the command `streamlit run streamlit_app.py`
